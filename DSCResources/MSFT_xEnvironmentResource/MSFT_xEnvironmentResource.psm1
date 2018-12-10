@@ -854,9 +854,10 @@ function Set-EnvironmentVariable
             }
             else
             {
-                [System.Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
+                Invoke-Command -ScriptBlock {
+                    [System.Environment]::SetEnvironmentVariable($Name, $Value, [System.EnvironmentVariableTarget]::Machine)
+                }
                 $environmentKey = Get-ItemProperty -Path $path -Name $Name -ErrorAction 'SilentlyContinue'
-
                 if ($null -eq $environmentKey)
                 {
                     $message = ($script:localizedData.GetItemPropertyFailure -f $Name, $path)
